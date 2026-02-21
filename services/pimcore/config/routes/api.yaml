@@ -1,0 +1,4 @@
+# API Routes for Product Management
+api_controllers:
+    resource: '../../src/Controller/'
+    type: annotation

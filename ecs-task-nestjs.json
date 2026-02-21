@@ -1,0 +1,48 @@
+{
+    "family": "challenge-nestjs",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "256",
+    "memory": "512",
+    "executionRoleArn": "arn:aws:iam::147847019615:role/ecsTaskExecutionRole",
+    "taskRoleArn": "arn:aws:iam::147847019615:role/challenge-ecs-task-role",
+    "containerDefinitions": [
+        {
+            "name": "nestjs",
+            "image": "147847019615.dkr.ecr.us-east-1.amazonaws.com/challenge/nestjs-integration:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 3000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {"name": "NODE_ENV", "value": "production"},
+                {"name": "PORT", "value": "3000"},
+                {"name": "LOG_LEVEL", "value": "INFO"},
+                {"name": "AWS_REGION", "value": "us-east-1"},
+                {"name": "SQS_QUEUE_URL", "value": "https://sqs.us-east-1.amazonaws.com/147847019615/product-ingestion-queue"},
+                {"name": "REDIS_HOST", "value": "challenge-redis.7yl2oj.0001.use1.cache.amazonaws.com"},
+                {"name": "REDIS_PORT", "value": "6379"},
+                {"name": "PIMCORE_API_URL", "value": "http://pimcore:8080/api"},
+                {"name": "MEDUSA_API_URL", "value": "http://medusa:9000"}
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/challenge-nestjs",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            },
+            "healthCheck": {
+                "command": ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/health || exit 1"],
+                "interval": 30,
+                "timeout": 5,
+                "retries": 3,
+                "startPeriod": 60
+            }
+        }
+    ]
+}

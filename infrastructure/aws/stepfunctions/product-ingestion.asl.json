@@ -1,0 +1,155 @@
+{
+  "Comment": "Product Ingestion Pipeline - Orchestrates JSON ingestion and event publishing",
+  "StartAt": "ValidateInput",
+  "States": {
+    "ValidateInput": {
+      "Type": "Task",
+      "Resource": "${ValidateLambdaArn}",
+      "Parameters": {
+        "taskType": "validate",
+        "products.$": "$.products",
+        "sourceBucket.$": "$.sourceBucket",
+        "sourceKey.$": "$.sourceKey"
+      },
+      "ResultPath": "$.validation",
+      "Next": "CheckValidation",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "HandleError"
+        }
+      ]
+    },
+    "CheckValidation": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.validation.valid",
+          "BooleanEquals": true,
+          "Next": "TransformProducts"
+        }
+      ],
+      "Default": "HandleInvalidInput"
+    },
+    "HandleInvalidInput": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::events:putEvents",
+      "Parameters": {
+        "Entries": [
+          {
+            "Source": "com.challenge.ingestion",
+            "DetailType": "IngestionFailed",
+            "Detail": {
+              "reason": "Invalid input data",
+              "validation.$": "$.validation"
+            },
+            "EventBusName": "${EventBusName}"
+          }
+        ]
+      },
+      "Next": "FailedState"
+    },
+    "TransformProducts": {
+      "Type": "Task",
+      "Resource": "${TransformLambdaArn}",
+      "Parameters": {
+        "taskType": "transform",
+        "products.$": "$.validation.products"
+      },
+      "ResultPath": "$.transformation",
+      "Next": "CheckTransformation",
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "HandleError"
+        }
+      ]
+    },
+    "CheckTransformation": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Variable": "$.transformation.transformedCount",
+          "NumericGreaterThan": 0,
+          "Next": "PrepareProductBatches"
+        }
+      ],
+      "Default": "NoProductsToProcess"
+    },
+    "NoProductsToProcess": {
+      "Type": "Pass",
+      "Result": {
+        "message": "No valid products to process"
+      },
+      "End": true
+    },
+    "PrepareProductBatches": {
+      "Type": "Pass",
+      "Parameters": {
+        "batchId.$": "States.UUID()",
+        "sourceBucket.$": "$.sourceBucket",
+        "sourceKey.$": "$.sourceKey",
+        "canonicalProducts.$": "$.transformation.canonicalProducts",
+        "totalCount.$": "$.transformation.transformedCount"
+      },
+      "Next": "PublishToEventBridge"
+    },
+    "PublishToEventBridge": {
+      "Type": "Task",
+      "Resource": "${PublishLambdaArn}",
+      "Parameters": {
+        "taskType": "publish",
+        "canonicalProducts.$": "$.canonicalProducts",
+        "batchId.$": "$.batchId",
+        "sourceBucket.$": "$.sourceBucket",
+        "sourceKey.$": "$.sourceKey"
+      },
+      "ResultPath": "$.publishResult",
+      "Next": "SuccessState",
+      "Retry": [
+        {
+          "ErrorEquals": ["States.TaskFailed"],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 3,
+          "BackoffRate": 2.0
+        }
+      ],
+      "Catch": [
+        {
+          "ErrorEquals": ["States.ALL"],
+          "ResultPath": "$.error",
+          "Next": "HandleError"
+        }
+      ]
+    },
+    "HandleError": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::events:putEvents",
+      "Parameters": {
+        "Entries": [
+          {
+            "Source": "com.challenge.ingestion",
+            "DetailType": "IngestionError",
+            "Detail": {
+              "error.$": "$.error",
+              "sourceBucket.$": "$.sourceBucket",
+              "sourceKey.$": "$.sourceKey"
+            },
+            "EventBusName": "${EventBusName}"
+          }
+        ]
+      },
+      "Next": "FailedState"
+    },
+    "FailedState": {
+      "Type": "Fail",
+      "Error": "IngestionFailed",
+      "Cause": "Product ingestion pipeline failed"
+    },
+    "SuccessState": {
+      "Type": "Succeed"
+    }
+  }
+}

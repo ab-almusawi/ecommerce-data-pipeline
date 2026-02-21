@@ -1,0 +1,259 @@
+{
+  "id": "Product",
+  "name": "Product",
+  "description": "E-Commerce Product for the Data Pipeline Challenge",
+  "parentClass": "",
+  "allowInherit": false,
+  "allowVariants": true,
+  "layoutDefinitions": {
+    "fieldtype": "panel",
+    "name": "pimcore_root",
+    "childs": [
+      {
+        "fieldtype": "tabpanel",
+        "name": "Product",
+        "childs": [
+          {
+            "fieldtype": "panel",
+            "name": "General",
+            "childs": [
+              {
+                "fieldtype": "input",
+                "name": "externalId",
+                "title": "External ID",
+                "tooltip": "Product ID from source system",
+                "mandatory": true,
+                "noteditable": false,
+                "index": true,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": true
+              },
+              {
+                "fieldtype": "input",
+                "name": "sku",
+                "title": "SKU",
+                "tooltip": "Stock Keeping Unit",
+                "mandatory": true,
+                "noteditable": false,
+                "index": true,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": true
+              },
+              {
+                "fieldtype": "localizedfields",
+                "name": "localizedfields",
+                "title": "Localized Fields",
+                "childs": [
+                  {
+                    "fieldtype": "input",
+                    "name": "name",
+                    "title": "Name",
+                    "tooltip": "Product name",
+                    "mandatory": true,
+                    "noteditable": false,
+                    "index": false,
+                    "locked": false,
+                    "style": "",
+                    "permissions": null,
+                    "datatype": "data",
+                    "relationType": false,
+                    "invisible": false,
+                    "visibleGridView": true,
+                    "visibleSearch": true
+                  },
+                  {
+                    "fieldtype": "wysiwyg",
+                    "name": "description",
+                    "title": "Description",
+                    "tooltip": "Product description",
+                    "mandatory": false,
+                    "noteditable": false,
+                    "index": false,
+                    "locked": false,
+                    "style": "",
+                    "permissions": null,
+                    "datatype": "data",
+                    "relationType": false,
+                    "invisible": false,
+                    "visibleGridView": false,
+                    "visibleSearch": false
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "fieldtype": "panel",
+            "name": "Pricing",
+            "childs": [
+              {
+                "fieldtype": "numeric",
+                "name": "price",
+                "title": "Price",
+                "tooltip": "Product price",
+                "mandatory": false,
+                "noteditable": false,
+                "index": false,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": false,
+                "decimalSize": 2
+              },
+              {
+                "fieldtype": "input",
+                "name": "currency",
+                "title": "Currency",
+                "tooltip": "Price currency (e.g., SAR)",
+                "mandatory": false,
+                "noteditable": false,
+                "index": false,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": false
+              }
+            ]
+          },
+          {
+            "fieldtype": "panel",
+            "name": "Status",
+            "childs": [
+              {
+                "fieldtype": "select",
+                "name": "status",
+                "title": "Status",
+                "tooltip": "Product status",
+                "mandatory": false,
+                "noteditable": false,
+                "index": true,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": true,
+                "options": [
+                  {"key": "Draft", "value": "draft"},
+                  {"key": "Active", "value": "active"},
+                  {"key": "Inactive", "value": "inactive"},
+                  {"key": "Discontinued", "value": "discontinued"}
+                ],
+                "defaultValue": "draft"
+              },
+              {
+                "fieldtype": "input",
+                "name": "sourcePlatform",
+                "title": "Source Platform",
+                "tooltip": "Source system (e.g., shein)",
+                "mandatory": false,
+                "noteditable": false,
+                "index": true,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": true
+              }
+            ]
+          },
+          {
+            "fieldtype": "panel",
+            "name": "Categories",
+            "childs": [
+              {
+                "fieldtype": "structuredTable",
+                "name": "categories",
+                "title": "Categories",
+                "tooltip": "Product categories",
+                "mandatory": false,
+                "noteditable": false,
+                "index": false,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": false,
+                "visibleSearch": false,
+                "cols": [
+                  {"key": "id", "label": "ID", "type": "text"},
+                  {"key": "name", "label": "Name", "type": "text"},
+                  {"key": "slug", "label": "Slug", "type": "text"},
+                  {"key": "level", "label": "Level", "type": "number"}
+                ],
+                "rows": []
+              }
+            ]
+          },
+          {
+            "fieldtype": "panel",
+            "name": "Metadata",
+            "childs": [
+              {
+                "fieldtype": "datetime",
+                "name": "importedAt",
+                "title": "Imported At",
+                "tooltip": "When the product was imported",
+                "mandatory": false,
+                "noteditable": true,
+                "index": true,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": false
+              },
+              {
+                "fieldtype": "datetime",
+                "name": "lastSyncedAt",
+                "title": "Last Synced At",
+                "tooltip": "Last sync timestamp",
+                "mandatory": false,
+                "noteditable": true,
+                "index": false,
+                "locked": false,
+                "style": "",
+                "permissions": null,
+                "datatype": "data",
+                "relationType": false,
+                "invisible": false,
+                "visibleGridView": true,
+                "visibleSearch": false
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

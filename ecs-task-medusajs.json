@@ -1,0 +1,36 @@
+{
+    "family": "challenge-medusajs",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "512",
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::147847019615:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "medusajs",
+            "image": "medusajs/medusa:latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 9000,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {"name": "NODE_ENV", "value": "production"},
+                {"name": "JWT_SECRET", "value": "challenge-jwt-secret-2026"},
+                {"name": "COOKIE_SECRET", "value": "challenge-cookie-secret-2026"},
+                {"name": "DATABASE_URL", "value": "postgresql://postgres:Challenge2026Secure@challenge-postgres.csjw4qawm0ph.us-east-1.rds.amazonaws.com:5432/medusa"},
+                {"name": "REDIS_URL", "value": "redis://challenge-redis.7yl2oj.0001.use1.cache.amazonaws.com:6379"}
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/challenge-medusajs",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ]
+}

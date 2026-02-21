@@ -1,0 +1,58 @@
+[
+  {
+    "code": "0",
+    "msg": "ok",
+    "info": {
+      "productInfo": {
+        "goods_id": "12345678",
+        "goods_sn": "SHEIN-TEST-12345",
+        "goods_name": "فستان صيفي أنيق",
+        "detail": {
+          "goods_desc": "A beautiful summer dress with floral pattern"
+        },
+        "retailPrice": {
+          "amount": "29.99",
+          "amountWithSymbol": "$29.99"
+        },
+        "salePrice": {
+          "amount": "24.99",
+          "amountWithSymbol": "$24.99"
+        },
+        "skuList": [
+          {
+            "sku_code": "SHEIN-TEST-12345-S-RED",
+            "stock": 50,
+            "mall_price": "24.99",
+            "retail_price": "29.99",
+            "sku_sale_attr": [
+              {"attr_value_name": "S"},
+              {"attr_value_name": "Red"}
+            ]
+          }
+        ],
+        "goods_imgs": {
+          "main_image": {
+            "origin_image": "https://img.shein.com/images/test-main.jpg"
+          }
+        },
+        "productDetails": [
+          {
+            "attr_name": "Brand",
+            "attr_value": "SHEIN"
+          },
+          {
+            "attr_name": "Material",
+            "attr_value": "Polyester"
+          }
+        ],
+        "parentCats": {
+          "cat_name": "Women Dresses"
+        },
+        "currentCat": {
+          "cat_id": "1001",
+          "cat_name": "Summer Dresses"
+        }
+      }
+    }
+  }
+]

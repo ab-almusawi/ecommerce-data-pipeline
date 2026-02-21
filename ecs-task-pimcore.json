@@ -1,0 +1,34 @@
+{
+    "family": "challenge-pimcore",
+    "networkMode": "awsvpc",
+    "requiresCompatibilities": ["FARGATE"],
+    "cpu": "512",
+    "memory": "1024",
+    "executionRoleArn": "arn:aws:iam::147847019615:role/ecsTaskExecutionRole",
+    "containerDefinitions": [
+        {
+            "name": "pimcore",
+            "image": "pimcore/pimcore:php8.2-latest",
+            "essential": true,
+            "portMappings": [
+                {
+                    "containerPort": 80,
+                    "protocol": "tcp"
+                }
+            ],
+            "environment": [
+                {"name": "APP_ENV", "value": "prod"},
+                {"name": "DATABASE_URL", "value": "pgsql://postgres:Challenge2026Secure@challenge-postgres.csjw4qawm0ph.us-east-1.rds.amazonaws.com:5432/pimcore"},
+                {"name": "REDIS_URL", "value": "redis://challenge-redis.7yl2oj.0001.use1.cache.amazonaws.com:6379"}
+            ],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/challenge-pimcore",
+                    "awslogs-region": "us-east-1",
+                    "awslogs-stream-prefix": "ecs"
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,13 @@
+{
+  "name": "pimcore-api",
+  "version": "1.0.0",
+  "description": "Pimcore DataHub REST API simulation for E-Commerce Pipeline",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "uuid": "^9.0.0"
+  }
+}
